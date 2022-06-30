@@ -1,0 +1,92 @@
+.anime-component {
+    display: flex;
+    margin: 1em;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.anime-component-body {
+    flex: 1;
+}
+
+.anime-component-cover {
+    width: 10em;
+    min-height: 15em;
+}
+
+.anime-component-body {
+    padding: 0.5em 1em;
+}
+
+.anime-component-body > h2 {
+    margin: 0;
+    margin-bottom: 0.5em;
+}
+
+.anime-component-links > span:not(:last-child)::after {
+    content: "・";
+    opacity: 0.25;
+}
+
+.anime-component-status {
+    margin: 0;
+    padding-inline: 0;
+    list-style-type: none;
+}
+
+.anime-component-status > li {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1em;
+    margin: 0.5em;
+    margin-left: 0;
+}
+.anime-component-status > li > * {
+    display: inline;
+    vertical-align: middle;
+}
+
+.anime-component-status-title {
+    margin-right: 0.5em;
+}
+
+.anime-component-status-users .anime-component-status-user {
+    margin-right: 0.5em;
+}
+
+.anime-component-status-user > img {
+    width: 2em;
+    height: 2em;
+    border-radius: 1em;
+    border: 1px solid #ddd;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.anime-component-miniinfo {
+    float: right;
+    opacity: 0.5;
+    display: inline-flex;
+    vertical-align: center;
+    align-items: center;
+}
+
+.anime-component-miniinfo::before {
+    font-size: 1.5em;
+    content: "A";
+    font-weight: bold;
+    opacity: 0;
+    visibility: hidden;
+    width: 0.5rem;
+}
+
+.anime-component-miniinfo > *:not(:last-child) {
+    margin-right: 0.5em;
+}
+
+.anime-component-status-unknown {
+    transition: 0.1s;
+}
+
+.anime-component-status-unknown:not(:hover) {
+    opacity: 0.25;
+}

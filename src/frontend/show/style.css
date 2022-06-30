@@ -1,0 +1,8 @@
+.anime-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(40em, 90vw), 1fr));
+}
+
+html {
+    font-family: Helvetica, system-ui, -apple-system, sans-serif;
+}
