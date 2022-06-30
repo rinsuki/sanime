@@ -3,11 +3,11 @@ import React from "react"
 import { AnimeInfo, WatchStatus, WATCH_STATUS } from "../../../type.js"
 
 import { AnimeTypeIcon } from "./anime-type-icon.js"
+import { CoolThumbnail } from "./cool-thumbnai.js"
 import { SeasonComponent } from "./season.js"
 import { UserIcon } from "./user-icon.js"
 
 import "./anime.css"
-import { CoolThumbnail } from "./cool-thumbnai.js"
 
 export const AnimeComponent: React.FC<{
     anime: AnimeInfo
