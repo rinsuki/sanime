@@ -29,4 +29,6 @@ ENTRYPOINT ["/sbin/tini", "--"]
 COPY --from=builder-backend /app/sanime/dist ./dist
 COPY --from=builder-frontend /app/sanime/public ./public
 
+EXPOSE 3000
+
 CMD ["yarn", "node", "/app/sanime/dist/backend"]
