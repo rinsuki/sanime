@@ -87,6 +87,7 @@ async function fetchAnnictWatchesRaw(users: string[]): Promise<z.infer<typeof zA
 }
 
 export async function fetchAnnictWatches(users: string[]): Promise<UserAnimeStatus[]> {
+    if (users.length === 0) return []
     const cached = (await redis.mget(users.map(user => prefix + user.toLowerCase())))
         .filter(isNotNull)
         .map(e => JSON.parse(e) as z.infer<typeof zAnnictUser>)
