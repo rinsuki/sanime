@@ -1,5 +1,10 @@
 version: "3.9"
 
+name: sanime-preview
+
+networks:
+  sanime-preview: {}
+
 services:
   app:
     build:
@@ -11,6 +16,8 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    networks:
+      - sanime-preview
     ports:
       - published: 13000
         target: 3000
@@ -22,3 +29,5 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
+    networks:
+      - sanime-preview
