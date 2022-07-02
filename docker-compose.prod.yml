@@ -11,8 +11,6 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-    networks:
-      - sanime
     ports:
       - published: 13000
         target: 3000
@@ -23,9 +21,4 @@ services:
       test: ["CMD", "redis-cli", "ping"]
       interval: 1s
       timeout: 3s
-      retries: 30
-    networks:
-      - sanime
-
-networks:
-  sanime: {}
+      retries: 30 
