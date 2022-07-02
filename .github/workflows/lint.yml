@@ -16,6 +16,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 18.x
-      - run: yarn install
+      - uses: bahmutov/npm-install@v1
       - run: yarn lint
       - run: yarn prettier -c
