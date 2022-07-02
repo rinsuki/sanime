@@ -14,7 +14,7 @@ services:
       redis:
         condition: service_healthy
     ports:
-      - published: 13000
+      - published: 3000
         target: 3000
 
   redis:
