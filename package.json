@@ -39,9 +39,6 @@
             ]
         }
     },
-    "resolutions": {
-        "react-intersection-observer@^9.3.4": "patch:react-intersection-observer@^9.3.4#.yarn/patches/react-intersection-observer-npm-9.3.4-e2ba1a4869.patch"
-    },
     "dependencies": {
         "got": "^12.1.0",
         "ioredis": "^5.1.0",
