@@ -12,6 +12,7 @@ export const filterModes = [
     "NOT_KNOW",
     "ONLY_WATCHED",
     "CHOTTO_WATCHED",
+    "WANT",
 ] as const
 export const filterModeName: Record<FilterMode, string> = {
     ONLY_WATCHED: "見終わった",
@@ -20,6 +21,7 @@ export const filterModeName: Record<FilterMode, string> = {
     KNOW: "知ってる",
     NOT_KNOW: "知らない",
     CHOTTO_WATCHED: "少しでも見たことがある",
+    WANT: "見たい",
 }
 
 export type FilterMode = typeof filterModes[number]

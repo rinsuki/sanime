@@ -249,7 +249,7 @@ function App() {
                             filterUserSeen = true
                             if (filterMode === "NOT_KNOW") {
                                 return null
-                            } else if (filterMode === "NOT_SEEN") {
+                            } else if (filterMode === "NOT_SEEN" || filterMode === "WANT") {
                                 if (s.status !== "WANT") return null
                             } else if (filterMode === "NOT_WATCHED") {
                                 if (s.status === "WATCHED" || s.status === "REPEATING") return null
@@ -279,7 +279,8 @@ function App() {
                         !filterUserSeen &&
                         (filterMode === "ONLY_WATCHED" ||
                             filterMode === "CHOTTO_WATCHED" ||
-                            filterMode === "KNOW")
+                            filterMode === "KNOW" ||
+                            filterMode === "WANT")
                     )
                         return null
                     if (onlyWant) return null
