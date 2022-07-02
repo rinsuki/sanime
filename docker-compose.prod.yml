@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379
+      ANNICT_TOKEN: $ANNICT_TOKEN
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - sanime
+    ports:
+      - published: 13000
+        target: 3000
+
+  redis:
+    image: redis:7
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    networks:
+      - sanime
+
+networks:
+  sanime: {}
