@@ -1753,10 +1753,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"connect-history-api-fallback@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "connect-history-api-fallback@npm:1.6.0"
-  checksum: 804ca2be28c999032ecd37a9f71405e5d7b7a4b3defcebbe41077bb8c5a0a150d7b59f51dcc33b2de30bc7e217a31d10f8cfad27e8e74c2fc7655eeba82d6e7e
+"connect-history-api-fallback@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "connect-history-api-fallback@npm:2.0.0"
+  checksum: dc5368690f4a5c413889792f8df70d5941ca9da44523cde3f87af0745faee5ee16afb8195434550f0504726642734f2683d6c07f8b460f828a12c45fbd4c9a68
   languageName: node
   linkType: hard
 
@@ -5185,21 +5185,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-intersection-observer@npm:^9.3.4":
-  version: 9.3.4
-  resolution: "react-intersection-observer@npm:9.3.4"
+"react-intersection-observer@npm:^9.3.5":
+  version: 9.3.5
+  resolution: "react-intersection-observer@npm:9.3.5"
   peerDependencies:
     react: ^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0
-  checksum: d17c9a1440d53336448c096975616fda6e6701c4d46a7a80cab210eee5f87d6e2a964fcd44a4db4114d72a6d9fac60eef91f1448badc3e59f6e0015089da37f5
-  languageName: node
-  linkType: hard
-
-"react-intersection-observer@patch:react-intersection-observer@^9.3.4#.yarn/patches/react-intersection-observer-npm-9.3.4-e2ba1a4869.patch::locator=sanime%40workspace%3A.":
-  version: 9.3.4
-  resolution: "react-intersection-observer@patch:react-intersection-observer@npm%3A9.3.4#.yarn/patches/react-intersection-observer-npm-9.3.4-e2ba1a4869.patch::version=9.3.4&hash=673533&locator=sanime%40workspace%3A."
-  peerDependencies:
-    react: ^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0
-  checksum: e1aceb22f694e55b7b2c8514d275e7cad44376222b07a3ab920eaa9723a75dc7254fe6d8934ab42bed56d21df51fc943544938c8335df513e257b8026db18c07
+  checksum: 218643acf5d34c8b9bf231e7a92a26a9c10b12159fe19c33c49b6aa92f1e25e5e1803deea0d8095797c101d36f8f57bc44d2edc55d085943b8a0c8391a96e336
   languageName: node
   linkType: hard
 
@@ -5535,14 +5526,14 @@ __metadata:
     prettier: ^2.7.1
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-intersection-observer: ^9.3.4
+    react-intersection-observer: ^9.3.5
     resolve-typescript-plugin: ^1.2.0
     sqlite3: ^5.0.8
     ts-loader: ^9.3.1
     typescript: ^4.7.4
     webpack: ^5.73.0
     webpack-cli: ^4.10.0
-    webpack-dev-server: ^4.9.2
+    webpack-dev-server: ^4.9.3
     zod: ^3.17.3
   languageName: unknown
   linkType: soft
@@ -6503,9 +6494,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-dev-server@npm:^4.9.2":
-  version: 4.9.2
-  resolution: "webpack-dev-server@npm:4.9.2"
+"webpack-dev-server@npm:^4.9.3":
+  version: 4.9.3
+  resolution: "webpack-dev-server@npm:4.9.3"
   dependencies:
     "@types/bonjour": ^3.5.9
     "@types/connect-history-api-fallback": ^1.3.5
@@ -6519,7 +6510,7 @@ __metadata:
     chokidar: ^3.5.3
     colorette: ^2.0.10
     compression: ^1.7.4
-    connect-history-api-fallback: ^1.6.0
+    connect-history-api-fallback: ^2.0.0
     default-gateway: ^6.0.3
     express: ^4.17.3
     graceful-fs: ^4.2.6
@@ -6543,7 +6534,7 @@ __metadata:
       optional: true
   bin:
     webpack-dev-server: bin/webpack-dev-server.js
-  checksum: 201e28445f59df55a31728885defe5bf5ae7880fa1dd563f370131794f8c02fd63fcd51bbca67a34f0df232e83b5f883d452d2b0ed1954eb257d574c0c76b46d
+  checksum: 845f2cc8e79a348ee7b17080eef9b332c675540888e0bc97ec6b62174882aca7995eaa7a3f49cfdd9af186da22f2f335fd03cb3c55cd49e387c8a3dc59700d66
   languageName: node
   linkType: hard
 
