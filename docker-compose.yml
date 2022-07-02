@@ -1,0 +1,26 @@
+version: "3.9"
+
+name: sanime-preview
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      REDIS_URL: redis://redis:6379
+      ANNICT_TOKEN: $ANNICT_TOKEN
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - published: 3000
+        target: 3000
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
