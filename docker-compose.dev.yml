@@ -2,14 +2,9 @@ version: "3.9"
 
 name: sanime-dev
 
-networks:
-  sanime-dev: {}
-
 services:
   redis:
     image: redis:7-alpine
-    networks:
-      - sanime-dev
     ports:
       - published: 6379
         target: 6379
