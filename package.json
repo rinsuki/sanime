@@ -6,7 +6,11 @@
     "scripts": {
         "check": "yarn lint && yarn prettier -c",
         "lint": "eslint .",
-        "prettier": "prettier . '!**/*.{m,c,}{js,ts}{,x}'"
+        "prettier": "prettier . '!**/*.{m,c,}{js,ts}{,x}'",
+        "dev:backend": "sleep 3 && nodemon dist/backend",
+        "dev:tsc": "tsc -w --preserveWatchOutput",
+        "dev:webpack": "webpack-dev-server",
+        "dev": "run-p \"dev:*\""
     },
     "devDependencies": {
         "@fortawesome/fontawesome-svg-core": "^6.1.1",
