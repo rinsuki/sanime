@@ -223,7 +223,7 @@ function App() {
                     if (showOnlyNotInMAL && anime.idMal != null) return null
                     if (showOnlyNotInAnnict && anime.idAnnict != null) return null
                     if (seasonFilter === "CURRENT") {
-                        if (anime.season != null && !isNearCurrentOrAfterSeason(anime.season))
+                        if (anime.season == null || !isNearCurrentOrAfterSeason(anime.season))
                             return null
                     } else if (seasonFilter === "SPECIFIC") {
                         if (
