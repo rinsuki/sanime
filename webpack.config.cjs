@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const MiniCSSExtractPlugin = require("mini-css-extract-plugin")
 const ResolveTypeScriptPlugin = require("resolve-typescript-plugin")
 
 module.exports = {
@@ -16,7 +15,7 @@ module.exports = {
     module: {
         rules: [
             { test: /\.tsx?$/, loader: "ts-loader" },
-            { test: /\.css$/, use: [MiniCSSExtractPlugin.loader, "css-loader"] },
+            { test: /\.css$/, use: [MiniCssExtractPlugin.loader, "css-loader"] },
         ],
     },
     devServer: {
