@@ -58,6 +58,8 @@ export async function fetchAnnictAnimes(
     annictIds: number[],
     _cacheAlreadyChecked = false,
 ): Promise<AnimeInfo[]> {
+    if (annictIds.length === 0) return []
+
     // first check cache
     if (!_cacheAlreadyChecked) {
         const cachedResponses = await redis.mget(annictIds.map(id => `${prefix}${id}`))
@@ -78,7 +80,6 @@ export async function fetchAnnictAnimes(
         }
         return arr
     }
-    if (annictIds.length === 0) return []
 
     let query = "query ($ids: [Int!]) { works: searchWorks( annictIds: $ids ) { nodes {\n"
     query += "annictId\n"
