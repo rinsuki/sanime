@@ -13,11 +13,12 @@ import { fetchAnnictAnimes } from "./fetchers/animes/annict.js"
 import { fetchAniListWatches } from "./fetchers/watchlists/anilist.js"
 import { fetchAnnictWatches } from "./fetchers/watchlists/annict.js"
 import { ViewsShow } from "./views/show.js"
+import { ViewsTop } from "./views/top.js"
 
 const app = new App()
 
 app.get("/", ctx => {
-    ctx.body = "/show?users=((annict|anilist):[a-z0-9_]+(,|$))+"
+    ctx.body = "<!DOCTYPE html>\n" + renderToStaticMarkup(createElement(ViewsTop))
 })
 
 app.get("/wp-login.php", ctx => {
