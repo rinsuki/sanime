@@ -30,7 +30,7 @@ const AddUserForm: React.FC<{ add: (user: string) => void }> = ({ add }) => {
         <form
             onSubmit={e => {
                 e.preventDefault()
-                if (user.length) {
+                if (user.length && userValidator.test(user)) {
                     add(`${service}:${user.toLowerCase()}`)
                     setUser("")
                 }
@@ -60,7 +60,11 @@ const AddUserForm: React.FC<{ add: (user: string) => void }> = ({ add }) => {
                     if (urlHandler(text)) e.preventDefault()
                 }}
             />
-            <input type="submit" value="追加" disabled={!user.length} />
+            <input
+                type="submit"
+                value="追加"
+                disabled={!user.length || !userValidator.test(user)}
+            />
         </form>
     )
 }
