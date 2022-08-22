@@ -1,6 +1,6 @@
 {
     "name": "sanime",
-    "packageManager": "yarn@3.2.1",
+    "packageManager": "yarn@3.2.2",
     "type": "module",
     "license": "MIT",
     "scripts": {
