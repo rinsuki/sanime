@@ -136,10 +136,31 @@ app.get("/show", async ctx => {
 
     if (needsToFetch.size > 0) {
         console.error(needsToFetch)
+        let canFixByReload = false
+        const needsToFetchIDs = Array.from(needsToFetch).join("\n")
+        const annictIds = []
+        for (const id of needsToFetch) {
+            if (id.startsWith("mal:")) {
+                const mal2Annict = new Map()
+                for (const work of allWorks) {
+                    if (work.myAnimeListID == null) continue
+                    if (!work.sourceServiceID.startsWith("annict:")) continue
+                    const annictId = parseInt(work.sourceServiceID.slice("annict:".length), 10)
+                    if (needsToFetch.has(malIdIfPossible(work))) {
+                        annictIds.push(annictId)
+                    }
+                }
+            }
+        }
+        if (annictIds.length) {
+            canFixByReload = true
+            await fetchAnnictAnimes(annictIds, true)
+        }
         ctx.status = 500
-        ctx.body = `Internal Server Error\n\nFailed to fetch some animes info:\n${Array.from(
-            needsToFetch,
-        ).join("\n")}`
+        let body = "Internal Server Error\n\nFailed to fetch some animes info"
+        if (canFixByReload) body += " (please try reload)"
+        body += `\n${needsToFetchIDs}`
+        ctx.body = body
         return
     }
 
