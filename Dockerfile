@@ -4,21 +4,20 @@ ENV NODE_ENV production
 
 WORKDIR /app/sanime
 
-COPY .yarn .yarn
-COPY .yarnrc.yml package.json yarn.lock ./
-RUN yarn install --immutable
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY tsconfig.json ./
 COPY src ./src
 
 FROM base as builder-backend
 
-RUN yarn tsc
+RUN pnpm tsc
 
 FROM base as builder-frontend
 
 COPY webpack.config.cjs ./
 COPY public ./public
-RUN yarn webpack
+RUN pnpm webpack
 
 FROM base
 
@@ -31,4 +30,4 @@ COPY --from=builder-frontend /app/sanime/public ./public
 
 EXPOSE 3000
 
-CMD ["yarn", "node", "/app/sanime/dist/backend"]
+CMD ["node", "/app/sanime/dist/backend"]

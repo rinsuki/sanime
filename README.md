@@ -4,8 +4,6 @@
 
 ## Develop
 
-If you are using VS Code, you need to run `yarn dlx @yarnpkg/sdks vscode`, or some extensions will not work.
-
 Setup environment variables
 
 - `ANNICT_TOKEN`

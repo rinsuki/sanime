@@ -16,6 +16,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 18.x
-      - run: yarn install
-      - run: yarn lint
-      - run: yarn prettier -c
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm prettier -c

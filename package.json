@@ -1,10 +1,9 @@
 {
     "name": "sanime",
-    "packageManager": "yarn@3.2.2",
     "type": "module",
     "license": "MIT",
     "scripts": {
-        "check": "yarn lint && yarn prettier -c",
+        "check": "pnpm lint && pnpm prettier -c",
         "lint": "eslint .",
         "prettier": "prettier . '!**/*.{m,c,}{js,ts}{,x}'",
         "dev:backend": "sleep 3 && nodemon dist/backend",
@@ -54,5 +53,6 @@
         "react-dom": "^18.2.0",
         "react-intersection-observer": "^9.3.5",
         "zod": "^3.17.3"
-    }
+    },
+    "packageManager": "pnpm@8.5.1+sha256.422dcb3af61ee44b2c55d8737226590134f8f5009e617fe708734d3a69a50811"
 }
