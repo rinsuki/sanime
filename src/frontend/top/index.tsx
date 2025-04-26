@@ -22,6 +22,13 @@ const AddUserForm: React.FC<{ add: (user: string) => void }> = ({ add }) => {
             if (user != null) add(`anilist:${user.toLowerCase()}`)
             return true
         }
+        const malUserURL =
+            /^https:\/\/myanimelist.net\/profile\/(?<user>[A-Za-z0-9_]+)(?:\/|$)/.exec(url)
+        if (malUserURL != null) {
+            const user = malUserURL.groups?.user
+            if (user != null) add(`mal:${user.toLowerCase()}`)
+            return true
+        }
 
         return false
     }
@@ -48,6 +55,7 @@ const AddUserForm: React.FC<{ add: (user: string) => void }> = ({ add }) => {
             <select value={service} onChange={e => setService(e.target.value)}>
                 <option value="annict">Annict</option>
                 <option value="anilist">AniList</option>
+                <option value="mal">MyAnimeList</option>
             </select>
             <input
                 type="text"

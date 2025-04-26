@@ -8,3 +8,5 @@ Setup environment variables
 
 - `ANNICT_TOKEN`
   - See [Annict Doc](https://developers.annict.com/docs/authentication/personal-access-token) to obtain token.
+- `MAL_CLIENT_ID`
+  - See [MyAnimeList API Doc](https://myanimelist.net/apiconfig) to obtain client ID.

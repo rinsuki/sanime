@@ -10,8 +10,10 @@ import { isNotNull } from "../utils/is-not-null.js"
 
 import { fetchAniListAnimes } from "./fetchers/animes/anilist.js"
 import { fetchAnnictAnimes } from "./fetchers/animes/annict.js"
+import { fetchMyAnimeListAnimes } from "./fetchers/animes/myanimelist.js"
 import { fetchAniListWatches } from "./fetchers/watchlists/anilist.js"
 import { fetchAnnictWatches } from "./fetchers/watchlists/annict.js"
+import { fetchMyAnimeListWatches } from "./fetchers/watchlists/myanimelist.js"
 import { ViewsShow } from "./views/show.js"
 import { ViewsTop } from "./views/top.js"
 
@@ -37,7 +39,7 @@ app.get("/show", async ctx => {
     if (typeof userIds === "string") userIds = userIds.split(",")
     userIds = userIds.map(u => u.trim()).filter((id, i, arr) => arr.indexOf(id) === i)
     for (const userId of userIds) {
-        if (!/^(?:annict|anilist):[a-z0-9_-]{1,50}$/.test(userId)) {
+        if (!/^(?:annict|anilist|mal):[a-z0-9_-]{1,50}$/.test(userId)) {
             ctx.status = 422
             ctx.body = "?users query including invalid user ID"
             return
@@ -54,10 +56,12 @@ app.get("/show", async ctx => {
     const anilistUsernames = userIds
         .filter(u => u.startsWith("anilist:"))
         .map(a => a.slice("anilist:".length))
+    const malUsernames = userIds.filter(u => u.startsWith("mal:")).map(a => a.slice("mal:".length))
     const users = (
         await Promise.all([
             fetchAnnictWatches(annictUsernames),
             fetchAniListWatches(anilistUsernames),
+            fetchMyAnimeListWatches(malUsernames),
         ])
     ).flat(1)
 
@@ -65,7 +69,7 @@ app.get("/show", async ctx => {
     const needsToFetch = new Set(allWorks.map(w => malIdIfPossible(w)))
     const worksMap = new Map<ServiceID, AnimeInfo>()
     const warns = []
-    // We have a Annict Data & AniList Data, and we need to merge them
+    // We have a Annict & MAL & AniList Data, and we need to merge them
     // First, extract ALL MAL IDs Animes, and fetch it from AniList
     console.log("anilist check...")
     const malWorkIds = allWorks.map(w => w.myAnimeListID).filter(isNotNull)
@@ -131,6 +135,19 @@ app.get("/show", async ctx => {
         } else {
             worksMap.set(work.id, work)
         }
+        needsToFetch.delete(work.id)
+    }
+    // Then, Fetch Remain MAL IDs from MAL
+    const existsKeys = new Set(worksMap.keys())
+    const remainedMALIds = Array.from(needsToFetch).filter(
+        x => x.startsWith("mal:") && !existsKeys.has(x),
+    )
+
+    const malWorks = await fetchMyAnimeListAnimes(
+        remainedMALIds.map(x => parseInt(x.slice("mal:".length), 10)),
+    )
+    for (const work of malWorks) {
+        worksMap.set(work.id, work)
         needsToFetch.delete(work.id)
     }
 

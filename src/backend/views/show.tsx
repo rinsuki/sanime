@@ -10,6 +10,7 @@ export const ViewsShow: React.FC<ViewsShowData> = props => {
                 <link rel="stylesheet" href="/wp-content/themes/sanime/show.css" />
                 <link rel="preconnect" href="https://s4.anilist.co" />
                 <link rel="preconnect" href="https://image.annict.com" />
+                <link rel="preconnect" href="https://cdn.myanimelist.net" />
                 <link rel="preload" type="script" href="/wp-content/themes/sanime/show.js" />
             </head>
             <body>
