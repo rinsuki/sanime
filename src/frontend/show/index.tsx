@@ -71,6 +71,7 @@ function App() {
     const [showOVA, setShowOVA] = useState(true)
     const [showONA, setShowONA] = useState(true)
     const [showOthers, setShowOthers] = useState(true)
+    const [minViewersCount, setMinViewersCount] = useState(1)
     return (
         <div>
             <p>
@@ -134,6 +135,22 @@ function App() {
                     />
                     Annictとの紐付けが登録されていないアニメのみ表示する
                     (AniListのユーザーしか見ていないアニメも表示されます)
+                </label>
+            </p>
+            <p>
+                <label>
+                    <input
+                        type="number"
+                        min="0"
+                        value={minViewersCount}
+                        onChange={e =>
+                            setMinViewersCount(
+                                Math.max(0, parseInt(e.currentTarget.value, 10) || 0),
+                            )
+                        }
+                        style={{ width: "4em" }}
+                    />
+                    人以上が見た/見ているアニメのみ表示する
                 </label>
             </p>
             <p
@@ -284,6 +301,16 @@ function App() {
                     )
                         return null
                     if (onlyWant) return null
+                    if (minViewersCount > 0) {
+                        const viewersCount = Array.from(status.entries()).reduce(
+                            (count, [s, users]) =>
+                                s === "WATCHED" || s === "WATCHING" || s === "REPEATING"
+                                    ? count + users.length
+                                    : count,
+                            0,
+                        )
+                        if (viewersCount < minViewersCount) return null
+                    }
                     const unknownUsers = users.map(u => u.id).filter(u => !knownUsers.has(u))
                     return (
                         <AnimeComponent
