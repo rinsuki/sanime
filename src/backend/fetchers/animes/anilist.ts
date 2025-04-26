@@ -149,6 +149,7 @@ export async function fetchAniListAnimes(
     })
     if (!res.ok && res.statusCode !== 404) {
         if (res.statusCode === 429) {
+            console.log("waiting rate limit")
             // eslint-disable-next-line no-promise-executor-return
             await new Promise<void>(resolve => setTimeout(resolve, 2000))
             return fetchAniListAnimes(ids, isMyAnimeListIDs, _cacheAlreadyChecked)
