@@ -1,7 +1,8 @@
 import { dirname } from "node:path"
 
-import staticMiddleware from "koa-static"
-import { App } from "piyo"
+import { serve } from "@hono/node-server"
+import { serveStatic } from "@hono/node-server/serve-static"
+import { Hono } from "hono"
 import { createElement } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
@@ -17,38 +18,30 @@ import { fetchMyAnimeListWatches } from "./fetchers/watchlists/myanimelist.js"
 import { ViewsShow } from "./views/show.js"
 import { ViewsTop } from "./views/top.js"
 
-const app = new App()
+const PUBLIC_DIR = dirname(new URL(import.meta.url).pathname) + "/../../public"
 
-app.get("/", ctx => {
-    ctx.body = "<!DOCTYPE html>\n" + renderToStaticMarkup(createElement(ViewsTop))
-})
+const app = new Hono()
 
-app.get("/wp-login.php", ctx => {
-    ctx.status = 418
-    ctx.body = "I'm a teapot, not WordPress :P"
-})
+app.get("/", c => c.html("<!DOCTYPE html>\n" + renderToStaticMarkup(createElement(ViewsTop))))
 
-app.get("/wp-admin/:path*", ctx => {
-    ctx.status = 418
-    ctx.body = "I'm a teapot, not WordPress :P"
-})
+app.get("/wp-login.php", c => c.text("I'm a teapot, not WordPress :P", 418))
 
-app.get("/show", async ctx => {
-    let userIds = ctx.query.users
-    if (userIds == null) return
-    if (typeof userIds === "string") userIds = userIds.split(",")
-    userIds = userIds.map(u => u.trim()).filter((id, i, arr) => arr.indexOf(id) === i)
+app.get("/wp-admin/*", c => c.text("I'm a teapot, not WordPress :P", 418))
+
+app.get("/show", async c => {
+    let userIds: string[] = (c.req.query("users") ?? "")
+        .split(",")
+        .map((u: string) => u.trim())
+        .filter((u: string) => u.length > 0)
+    if (userIds.length === 0) return c.redirect("/")
+    userIds = userIds.filter((id, i, arr) => arr.indexOf(id) === i)
     for (const userId of userIds) {
         if (!/^(?:annict|anilist|mal):[A-Za-z0-9_-]{1,50}$/.test(userId)) {
-            ctx.status = 422
-            ctx.body = "?users query including invalid user ID"
-            return
+            return c.text("?users query including invalid user ID", 422)
         }
     }
     if (userIds.length > 20) {
-        ctx.status = 422
-        ctx.body = "for now, maximum number of users is 20"
-        return
+        return c.text("for now, maximum number of users is 20", 422)
     }
     const annictUsernames = userIds
         .filter(u => u.startsWith("annict:"))
@@ -68,7 +61,7 @@ app.get("/show", async ctx => {
     const allWorks = users.map(u => u.works).flat(1)
     const needsToFetch = new Set(allWorks.map(w => malIdIfPossible(w)))
     const worksMap = new Map<ServiceID, AnimeInfo>()
-    const warns = []
+    const warns: string[] = []
     // We have a Annict & MAL & AniList Data, and we need to merge them
     // First, extract ALL MAL IDs Animes, and fetch it from AniList
     console.log("anilist check...")
@@ -155,7 +148,7 @@ app.get("/show", async ctx => {
         console.error(needsToFetch)
         let canFixByReload = false
         const needsToFetchIDs = Array.from(needsToFetch).join("\n")
-        const annictIds = []
+        const annictIds: number[] = []
         for (const id of needsToFetch) {
             if (id.startsWith("mal:")) {
                 const mal2Annict = new Map()
@@ -173,30 +166,37 @@ app.get("/show", async ctx => {
             canFixByReload = true
             await fetchAnnictAnimes(annictIds, true)
         }
-        ctx.status = 500
         let body = "Internal Server Error\n\nFailed to fetch some animes info"
         if (canFixByReload) body += " (please try reload)"
         body += `\n${needsToFetchIDs}`
-        ctx.body = body
-        return
+        return c.text(body, 500)
     }
 
-    ctx.body =
+    return c.html(
         "<!DOCTYPE html>\n" +
-        renderToStaticMarkup(
-            createElement(ViewsShow, {
-                users,
-                animes: Object.fromEntries(worksMap.entries()),
-                warns,
-            }),
-        )
+            renderToStaticMarkup(
+                createElement(ViewsShow, {
+                    users,
+                    animes: Object.fromEntries(worksMap.entries()),
+                    warns,
+                }),
+            ),
+    )
 })
 
-app.get(
-    "/(.*).([a-z]{1,10})",
-    staticMiddleware(dirname(new URL(import.meta.url).pathname) + "/../../public"),
+app.use(
+    "/:path{.*\\.[a-z]{1,10}}",
+    serveStatic({
+        root: PUBLIC_DIR,
+    }),
 )
 
-app.listen(3000, () => {
-    console.log("Listen on http://localhost:3000")
-})
+serve(
+    {
+        fetch: app.fetch,
+        port: 3000,
+    },
+    info => {
+        console.log(`Listen on http://${info.address}:${info.port}`)
+    },
+)
