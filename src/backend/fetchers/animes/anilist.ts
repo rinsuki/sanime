@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import { AnimeInfo, AnimeType, Season } from "../../../type.js"
 import { isNotNull } from "../../../utils/is-not-null.js"
+import { FetchContext } from "../../fetch-context.js"
 import { redis } from "../../redis.js"
 
 const anilistFormat = [
@@ -81,6 +82,7 @@ function resToInfo(work: NonNullable<z.infer<typeof zRes>>): AnimeInfo {
 const MAX_LENGTH = 50
 
 export async function fetchAniListAnimes(
+    fetchContext: FetchContext,
     ids: number[],
     isMyAnimeListIDs: boolean,
     _cacheAlreadyChecked = false,
@@ -96,14 +98,19 @@ export async function fetchAniListAnimes(
                 .map(a => JSON.parse(a) as z.infer<typeof zRes>)
                 .filter(isNotNull)
                 .map(resToInfo),
-            ...(await fetchAniListAnimes(notCachedIds, isMyAnimeListIDs, true)),
+            ...(await fetchAniListAnimes(fetchContext, notCachedIds, isMyAnimeListIDs, true)),
         ]
     }
     if (ids.length > MAX_LENGTH) {
         const arr = []
         for (let i = 0; i < ids.length; i += MAX_LENGTH) {
             arr.push(
-                ...(await fetchAniListAnimes(ids.slice(i, i + MAX_LENGTH), isMyAnimeListIDs, true)),
+                ...(await fetchAniListAnimes(
+                    fetchContext,
+                    ids.slice(i, i + MAX_LENGTH),
+                    isMyAnimeListIDs,
+                    true,
+                )),
             )
         }
         return arr
@@ -150,9 +157,10 @@ export async function fetchAniListAnimes(
     if (!res.ok && res.statusCode !== 404) {
         if (res.statusCode === 429) {
             console.log("waiting rate limit")
+            fetchContext.breakIfNeeded()
             // eslint-disable-next-line no-promise-executor-return
             await new Promise<void>(resolve => setTimeout(resolve, 2000))
-            return fetchAniListAnimes(ids, isMyAnimeListIDs, _cacheAlreadyChecked)
+            return fetchAniListAnimes(fetchContext, ids, isMyAnimeListIDs, _cacheAlreadyChecked)
         }
         throw new HTTPError(res)
     }
@@ -171,8 +179,13 @@ export async function fetchAniListAnimes(
         const sliced = ids.slice(0, ids.length / 2)
         console.log("伝家の宝刀†二分探索†", ids.length, sliced.length)
         return [
-            ...(await fetchAniListAnimes(sliced, isMyAnimeListIDs, true)),
-            ...(await fetchAniListAnimes(ids.slice(sliced.length), isMyAnimeListIDs, true)),
+            ...(await fetchAniListAnimes(fetchContext, sliced, isMyAnimeListIDs, true)),
+            ...(await fetchAniListAnimes(
+                fetchContext,
+                ids.slice(sliced.length),
+                isMyAnimeListIDs,
+                true,
+            )),
         ]
     }
 

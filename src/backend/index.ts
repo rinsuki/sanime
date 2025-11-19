@@ -9,6 +9,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { AnimeInfo, malIdIfPossible, ServiceID } from "../type.js"
 import { isNotNull } from "../utils/is-not-null.js"
 
+import { FetchContext } from "./fetch-context.js"
 import { fetchAniListAnimes } from "./fetchers/animes/anilist.js"
 import { fetchAnnictAnimes } from "./fetchers/animes/annict.js"
 import { fetchMyAnimeListAnimes } from "./fetchers/animes/myanimelist.js"
@@ -29,6 +30,7 @@ app.get("/wp-login.php", c => c.text("I'm a teapot, not WordPress :P", 418))
 app.get("/wp-admin/*", c => c.text("I'm a teapot, not WordPress :P", 418))
 
 app.get("/show", async c => {
+    const fetchContext = new FetchContext()
     let userIds: string[] = (c.req.query("users") ?? "")
         .split(",")
         .map((u: string) => u.trim())
@@ -66,7 +68,11 @@ app.get("/show", async c => {
     // First, extract ALL MAL IDs Animes, and fetch it from AniList
     console.log("anilist check...")
     const malWorkIds = allWorks.map(w => w.myAnimeListID).filter(isNotNull)
-    const anilistMALWorks = await fetchAniListAnimes(Array.from(new Set(malWorkIds)), true)
+    const anilistMALWorks = await fetchAniListAnimes(
+        fetchContext,
+        Array.from(new Set(malWorkIds)),
+        true,
+    )
     const anilistTitles = new Map<ServiceID, string>()
     for (const work of anilistMALWorks) {
         if (worksMap.has(work.id)) {
@@ -84,7 +90,7 @@ app.get("/show", async c => {
         .filter(isNotNull)
         .filter(i => i.startsWith("anilist:"))
         .map(a => parseInt(a.slice("anilist:".length), 10))
-    const anilistWorks = await fetchAniListAnimes(anilistIds, false)
+    const anilistWorks = await fetchAniListAnimes(fetchContext, anilistIds, false)
     for (const work of anilistWorks) {
         if (worksMap.has(work.id)) {
             warns.push(`Duplicate AniList ID ${work.id}`)
