@@ -7,7 +7,7 @@ export class FetchContext {
 
     breakIfNeeded(refreshAfter = 1) {
         const sanitizedRefreshAfter = Math.floor(Number.isNaN(refreshAfter) ? 1 : refreshAfter)
-        const clampedRefreshAfter = Math.min(Math.max(sanitizedRefreshAfter))
+        const clampedRefreshAfter = Math.min(Math.max(sanitizedRefreshAfter, 1), 10)
         const diff = performance.now() - this.startedAt + clampedRefreshAfter * 1000
         if (diff > TIME_LIMIT) {
             const res = new Response(
