@@ -182,7 +182,7 @@ export async function fetchAniListAnimes(
         if (ids.length === 1) throw new Error("Invalid State")
         const sliced = ids.slice(0, ids.length / 2)
         console.log("伝家の宝刀†二分探索†", ids.length, sliced.length)
-        return [
+        const res = [
             ...(await fetchAniListAnimes(fetchContext, sliced, isMyAnimeListIDs, true)),
             ...(await fetchAniListAnimes(
                 fetchContext,
@@ -191,6 +191,11 @@ export async function fetchAniListAnimes(
                 true,
             )),
         ]
+        if (ids.length === MAX_LENGTH) {
+            // 二分探索の一番上が終了した
+            fetchContext.breakIfNeeded()
+        }
+        return res
     }
 
     const data = z.record(z.string(), zRes).parse(res.body.data)
