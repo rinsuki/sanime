@@ -1,3 +1,5 @@
+import { setTimeout } from "node:timers/promises"
+
 import got, { HTTPError } from "got"
 import { z } from "zod"
 
@@ -140,6 +142,7 @@ export async function fetchAniListAnimes(
         errors?: unknown[]
     }
 
+    const avoidDosPromise = setTimeout(1000)
     const res = await got.post<GraphResponse>("https://graphql.anilist.co/", {
         body: JSON.stringify({
             query,
@@ -154,12 +157,13 @@ export async function fetchAniListAnimes(
         responseType: "json",
         throwHttpErrors: false,
     })
+    await avoidDosPromise
     if (!res.ok && res.statusCode !== 404) {
         if (res.statusCode === 429) {
             console.log("waiting rate limit", res.headers)
             fetchContext.breakIfNeeded(parseInt(res.headers["retry-after"] ?? "1", 10))
             // eslint-disable-next-line no-promise-executor-return
-            await new Promise<void>(resolve => setTimeout(resolve, 2000))
+            await setTimeout(2000)
             return fetchAniListAnimes(fetchContext, ids, isMyAnimeListIDs, _cacheAlreadyChecked)
         }
         throw new HTTPError(res)

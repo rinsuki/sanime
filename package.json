@@ -17,6 +17,7 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "@rinsuki/eslint-config": "^2.0.0",
         "@rinsuki/prettier-config": "^1.5.0",
+        "@types/node": "^24.10.1",
         "@types/react": "^18.0.14",
         "@types/react-dom": "^18.0.5",
         "css-loader": "^6.7.1",
