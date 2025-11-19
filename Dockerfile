@@ -1,33 +1,36 @@
-FROM node:18-alpine as base
+FROM node:24-trixie AS base
 
 ENV NODE_ENV production
 
 WORKDIR /app/sanime
 
+RUN corepack enable pnpm
+
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod true
+
+FROM base AS build-base
+RUN pnpm install --frozen-lockfile --prod false
 COPY tsconfig.json ./
 COPY src ./src
 
-FROM base as builder-backend
+FROM build-base AS build-backend
 
 RUN pnpm tsc
 
-FROM base as builder-frontend
-
+FROM build-base as build-frontend
 COPY webpack.config.cjs ./
 COPY public ./public
 RUN pnpm webpack
 
-FROM base
+FROM gcr.io/distroless/nodejs24-debian13:nonroot
 
-RUN apk --no-cache add tini
+WORKDIR /app/sanime
 
-ENTRYPOINT ["/sbin/tini", "--"]
-
-COPY --from=builder-backend /app/sanime/dist ./dist
-COPY --from=builder-frontend /app/sanime/public ./public
+COPY --from=base /app/sanime/node_modules ./node_modules
+COPY --from=build-backend /app/sanime/dist ./dist
+COPY --from=build-frontend /app/sanime/public ./public
 
 EXPOSE 3000
 
-CMD ["node", "/app/sanime/dist/backend"]
+CMD ["/app/sanime/dist/backend"]
