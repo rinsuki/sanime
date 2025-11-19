@@ -39,7 +39,7 @@ app.get("/show", async ctx => {
     if (typeof userIds === "string") userIds = userIds.split(",")
     userIds = userIds.map(u => u.trim()).filter((id, i, arr) => arr.indexOf(id) === i)
     for (const userId of userIds) {
-        if (!/^(?:annict|anilist|mal):[a-z0-9_-]{1,50}$/.test(userId)) {
+        if (!/^(?:annict|anilist|mal):[A-Za-z0-9_-]{1,50}$/.test(userId)) {
             ctx.status = 422
             ctx.body = "?users query including invalid user ID"
             return

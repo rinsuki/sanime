@@ -15,6 +15,7 @@ const malFormat = [
     "music",
     "unknown",
     "pv",
+    "cm",
 ] as const
 
 const malSeasons = ["winter", "spring", "summer", "fall"] as const
@@ -50,6 +51,7 @@ const malFormatToSharedType: { [key in typeof malFormat[number]]: AnimeType } = 
     music: "OTHERS",
     unknown: "OTHERS",
     pv: "OTHERS",
+    cm: "OTHERS",
 }
 
 const malSeasonToSharedType: { [key in typeof malSeasons[number]]: Season } = {
