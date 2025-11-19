@@ -156,8 +156,8 @@ export async function fetchAniListAnimes(
     })
     if (!res.ok && res.statusCode !== 404) {
         if (res.statusCode === 429) {
-            console.log("waiting rate limit")
-            fetchContext.breakIfNeeded()
+            console.log("waiting rate limit", res.headers)
+            fetchContext.breakIfNeeded(parseInt(res.headers["retry-after"] ?? "1", 10))
             // eslint-disable-next-line no-promise-executor-return
             await new Promise<void>(resolve => setTimeout(resolve, 2000))
             return fetchAniListAnimes(fetchContext, ids, isMyAnimeListIDs, _cacheAlreadyChecked)

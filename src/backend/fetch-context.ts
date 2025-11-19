@@ -5,11 +5,13 @@ const TIME_LIMIT = 5 * 1000 // 5 seconds
 export class FetchContext {
     startedAt = performance.now()
 
-    breakIfNeeded() {
-        const diff = performance.now() - this.startedAt
+    breakIfNeeded(refreshAfter = 1) {
+        const sanitizedRefreshAfter = Math.floor(Number.isNaN(refreshAfter) ? 1 : refreshAfter)
+        const clampedRefreshAfter = Math.min(Math.max(sanitizedRefreshAfter))
+        const diff = performance.now() - this.startedAt + clampedRefreshAfter * 1000
         if (diff > TIME_LIMIT) {
             const res = new Response(
-                '<meta charset="UTF-8"><meta http-equiv="Refresh" content="1">取得中です……',
+                `<meta charset="UTF-8"><meta http-equiv="Refresh" content="${clampedRefreshAfter}">取得中です……しばらくお待ちください`,
                 {
                     status: 503,
                     headers: {
